@@ -2,6 +2,7 @@
 #include <iostream>
 
 enum Result { ONGOING, X_WINS, O_WINS, DRAW };
+enum Mode { PvP = 1, PvC = 2 };
 
 void printBoard(const std::array<char, 9> &board) {
   for (size_t i = 0; i < 9; ++i) {
@@ -41,6 +42,14 @@ Result calculateResult(const std::array<char, 9> &board) {
 
 
 int main(int argc, char *argv[]) {
+  std::cout << "Welcome to Tic-Tac-Toe!\n";
+
+  std::cout << "Choose PvP (1) or PvC (2): ";
+  int choice;
+  for (std::cin >> choice; choice != PvP && choice != PvC; std::cin >> choice)
+    std::cout << "Invalid choice. Choose PvP (1) or PvC (2): ";
+  Mode mode = static_cast<Mode>(choice);
+
   std::array<char, 9> board = {'1', '2', '3', '4', '5', '6', '7', '8', '9'};
   char turn = 'X';
   int move = 0;
