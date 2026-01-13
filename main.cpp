@@ -39,7 +39,24 @@ Result calculateResult(const std::array<char, 9> &board) {
   }
   return DRAW;
 }
+int getPlayerMove(const std::array<char, 9> &board, char turn) {
+  int move = 0;
+  std::cout << "Enter your move (1-9):";
+  for (std::cin >> move;
+       move < 1 || move > 9 || board[move - 1] == 'X' || board[move - 1] == 'O';
+       std::cin >> move) {
+    std::cout << "Invalid move. Enter a new move (1-9):";
+  }
+  return move;
+}
 
+int calculateComputerMove(const std::array<char, 9> &board, char turn) {
+  for (size_t i = 0; i < 9; ++i) {
+    if (board[i] != 'X' && board[i] != 'O')
+      return i + 1;
+  }
+  return -1;
+}
 
 int main(int argc, char *argv[]) {
   std::cout << "Welcome to Tic-Tac-Toe!\n";
@@ -55,21 +72,42 @@ int main(int argc, char *argv[]) {
   int move = 0;
   Result res = ONGOING;
 
-  while (res == ONGOING) {
-    std::cout << "\033[2J\033[1;1H"; // clear screen
-    printBoard(board);
-    std::cout << "\n";
+  if (mode == PvP) {
+    while (res == ONGOING) {
+      std::cout << "\033[2J\033[1;1H"; // clear screen
+      printBoard(board);
+      std::cout << "\n";
 
-    std::cout << turn << "'s turn.\nEnter your move (1-9):";
-    for (std::cin >> move; move < 1 || move > 9 || board[move - 1] == 'X' ||
-                           board[move - 1] == 'O';
-         std::cin >> move) {
-      std::cout << "Invalid move. Enter a new move (1-9):";
+      std::cout << turn << "'s turn.\n";
+      move = getPlayerMove(board, turn);
+
+      board[move - 1] = turn;
+      turn = (turn == 'X') ? 'O' : 'X';
+      res = calculateResult(board);
     }
+  } else {
+    srand(time(NULL));
+    bool computerPlays = mode == PvC && rand() % 2 == 0;
+    while (res == ONGOING) {
+      if (computerPlays) {
+        move = calculateComputerMove(board, turn);
+        computerPlays = false;
+      } else {
+        std::cout << "\033[2J\033[1;1H"; // clear screen
+        printBoard(board);
+        std::cout << "\n";
 
-    board[move - 1] = turn;
-    turn = (turn == 'X') ? 'O' : 'X';
-    res = calculateResult(board);
+        if (move != 0)
+          std::cout << "Computer played " << move << "\n";
+
+        std::cout << turn << "'s turn.\n";
+        move = getPlayerMove(board, turn);
+        computerPlays = true;
+      }
+      board[move - 1] = turn;
+      turn = (turn == 'X') ? 'O' : 'X';
+      res = calculateResult(board);
+    }
   }
 
   printBoard(board);
