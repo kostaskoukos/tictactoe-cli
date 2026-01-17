@@ -50,12 +50,50 @@ int getPlayerMove(const std::array<char, 9> &board, char turn) {
   return move;
 }
 
-int calculateComputerMove(const std::array<char, 9> &board, char turn) {
-  for (size_t i = 0; i < 9; ++i) {
-    if (board[i] != 'X' && board[i] != 'O')
-      return i + 1;
+int minMax(const std::array<char, 9> &board, char turn, bool isMax, int &move,
+           bool isRoot = false) {
+  Result res = calculateResult(board);
+  if (res == X_WINS)
+    return turn == 'X' ? 1 : -1;
+  else if (res == O_WINS)
+    return turn == 'O' ? 1 : -1;
+  else if (res == DRAW)
+    return 0;
+
+  if (isMax) {
+    int max = -1000;
+    for (size_t i = 0; i < 9; ++i) {
+      if (board[i] == 'X' || board[i] == 'O')
+        continue;
+
+      std::array<char, 9> newBoard = board;
+      newBoard[i] = turn;
+      int score = minMax(newBoard, turn, false, move);
+      if (score > max) {
+        max = score;
+        if (isRoot)
+          move = i;
+      }
+    }
+    return max;
+  } else {
+    int min = 1000;
+    for (size_t i = 0; i < 9; ++i) {
+      if (board[i] == 'X' || board[i] == 'O')
+        continue;
+
+      std::array<char, 9> newBoard = board;
+      newBoard[i] = turn == 'X' ? 'O' : 'X';
+      min = std::min(min, minMax(newBoard, turn, true, move));
+    }
+    return min;
   }
-  return -1;
+}
+
+int calculateComputerMove(const std::array<char, 9> &board, char turn) {
+  int move;
+  minMax(board, turn, true, move, true);
+  return move + 1;
 }
 
 int main(int argc, char *argv[]) {
