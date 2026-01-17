@@ -5,6 +5,7 @@ enum Result { ONGOING, X_WINS, O_WINS, DRAW };
 enum Mode { PvP = 1, PvC = 2 };
 
 void printBoard(const std::array<char, 9> &board) {
+  std::cout << "\033[2J\033[1;1H";
   for (size_t i = 0; i < 9; ++i) {
     std::cout << board[i];
 
@@ -15,6 +16,7 @@ void printBoard(const std::array<char, 9> &board) {
     else
       std::cout << " | ";
   }
+  std::cout << "\n";
 }
 
 Result calculateResult(const std::array<char, 9> &board) {
@@ -112,9 +114,7 @@ int main(int argc, char *argv[]) {
 
   if (mode == PvP) {
     while (res == ONGOING) {
-      std::cout << "\033[2J\033[1;1H"; // clear screen
       printBoard(board);
-      std::cout << "\n";
 
       std::cout << turn << "'s turn.\n";
       move = getPlayerMove(board, turn);
@@ -131,9 +131,7 @@ int main(int argc, char *argv[]) {
         move = calculateComputerMove(board, turn);
         computerPlays = false;
       } else {
-        std::cout << "\033[2J\033[1;1H"; // clear screen
         printBoard(board);
-        std::cout << "\n";
 
         if (move != 0)
           std::cout << "Computer played " << move << "\n";
