@@ -52,7 +52,7 @@ int getPlayerMove(const std::array<char, 9> &board, char turn) {
   return move;
 }
 
-int negaMax(const std::array<char, 9> &board, int color, int &move,
+int negaMax(std::array<char, 9> &board, int color, int &move,
             bool isRoot = false) {
   Result res = calculateResult(board);
   if (res == DRAW)
@@ -65,10 +65,9 @@ int negaMax(const std::array<char, 9> &board, int color, int &move,
     if (board[i] == 'X' || board[i] == 'O')
       continue;
 
-    auto newBoard = board;
-    // X = 1, O = -1
-    newBoard[i] = (color == 1 ? 'X' : 'O');
-    int score = -negaMax(newBoard, -color, move);
+    board[i] = (color == 1 ? 'X' : 'O'); // X = 1, O = -1
+    int score = -negaMax(board, -color, move);
+    board[i] = '1' + i; // Undo move
     if (score > maxScore) {
       maxScore = score;
       if (isRoot)
@@ -78,7 +77,7 @@ int negaMax(const std::array<char, 9> &board, int color, int &move,
   return maxScore;
 }
 
-int calculateComputerMove(const std::array<char, 9> &board, char turn) {
+int calculateComputerMove(std::array<char, 9> &board, char turn) {
   int move;
   negaMax(board, turn == 'X' ? 1 : -1, move, true);
   return move + 1;
