@@ -1,6 +1,6 @@
 # Tic Tac Toe CLI
 
-A simple command-line Tic Tac Toe game written in C++.
+A simple command-line Tic Tac Toe game written in C++ to learn game theory techniques and algorithms such as minMax, negaMax, alpha-beta pruning, etc.
 
 ## How to Run Locally
 
@@ -11,13 +11,13 @@ git clone https://github.com/kostaskoukos/tictactoe-cli
 cd tictactoe-cli
 ```
 
-2. **Compile the program**:
+1. **Compile the program**:
 
 ```sh
 g++ -o tictactoe main.cpp
 ```
 
-3. **Run the game**:
+1. **Run the game**:
 
 ```sh
 ./tictactoe
@@ -25,13 +25,12 @@ g++ -o tictactoe main.cpp
 
 ## How to Play
 
-- The game is played on a 3x3 grid.
-- Players take turns entering the row and column numbers (e.g., `1 2`) to place their mark (X or O).
-- The first player to get three of their marks in a row (vertically, horizontally, or diagonally) wins.
-- If all cells are filled and no player has won, the game ends in a draw.
+- Choose between PvP and PvC.
+- The usual Tic Tac Toe rules apply, with X playing first.
+- To play a move, type the corresponding square's number (1-9).
 
 ## How the Project Works
 
-- The game logic, board display, and user input handling are implemented in `main.cpp`.
-- The program alternates turns between two players, checks for a win or draw after each move, and displays the board state after every turn.
+- The board is implemented as a char array of size 9, `std:array<char, 9>`.
+- The `calculateResult()` function controls the loop and game state.
 - The computer move is calculated through the [negaMax](https://en.wikipedia.org/wiki/Megamax) algorithm.
