@@ -33,4 +33,4 @@ g++ -o tictactoe main.cpp
 
 - The board is implemented as a char array of size 9, `std:array<char, 9>`.
 - The `calculateResult()` function controls the loop and game state.
-- The computer move is calculated through the [negaMax](https://en.wikipedia.org/wiki/Megamax) algorithm.
+- The computer move is calculated through the [negaMax](https://en.wikipedia.org/wiki/Megamax) algorithm with alpha-beta pruning.

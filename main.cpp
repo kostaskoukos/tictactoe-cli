@@ -53,7 +53,7 @@ int getPlayerMove(const std::array<char, 9> &board, char turn) {
 }
 
 int negaMax(std::array<char, 9> &board, int color, int &move,
-            bool isRoot = false) {
+            bool isRoot = false, int alpha = -100, int beta = 100) {
   Result res = calculateResult(board);
   if (res != ONGOING)
     return res * color;
@@ -64,13 +64,16 @@ int negaMax(std::array<char, 9> &board, int color, int &move,
       continue;
 
     board[i] = (color == 1 ? 'X' : 'O'); // X = 1, O = -1
-    int score = -negaMax(board, -color, move);
+    int score = -negaMax(board, -color, move, false, -beta, -alpha);
     board[i] = '1' + i; // Undo move
     if (score > maxScore) {
       maxScore = score;
       if (isRoot)
         move = i;
     }
+    alpha = std::max(alpha, maxScore);
+    if (alpha >= beta)
+      break; // Beta cut-off
   }
   return maxScore;
 }
